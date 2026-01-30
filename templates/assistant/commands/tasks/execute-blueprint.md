@@ -112,7 +112,7 @@ Otherwise, if tasks exist, proceed directly to execution.
 
 Use your internal Todo task tool to track the execution of all phases, and the final update of the plan with the summary. Example:
 
-- [ ] Create feature branch from the main branch.
+- [ ] Create feature branch via `node $root/config/scripts/create-feature-branch.cjs $1`
 - [ ] Validate or auto-generate tasks and execution blueprint if missing.
 - [ ] Execute $root/.ai/task-manager/config/hooks/PRE_PHASE.md hook before Phase 1.
 - [ ] Phase 1: Execute 1 task(s) in parallel.

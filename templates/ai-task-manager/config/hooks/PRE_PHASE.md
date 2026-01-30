@@ -4,9 +4,24 @@ This hook contains the phase preparation logic that should be executed before st
 
 ## Phase Pre-Execution
 
-Before starting execution check if you are in the `main` branch. If so, create a git branch to work on this blueprint use the plan name for the branch name.
+### Feature Branch Creation
 
-If there are unstaged changes in the `main` branch, do not create a feature branch.
+Create a feature branch for this plan execution (only runs from main/master with a clean working tree):
+
+```bash
+# Create feature branch (handles all edge cases automatically)
+node $root/config/scripts/create-feature-branch.cjs $1
+
+# Exit codes:
+#   0 = Success (branch created, already exists, or not on main/master)
+#   1 = Error (not git repo, uncommitted changes, or plan not found)
+```
+
+**Behavior**:
+- From `main`/`master` with clean tree: Creates `feature/{planId}--{plan-name}` branch
+- From `main`/`master` with uncommitted changes: Exits with error (exit 1)
+- From feature branch: Proceeds without creating a new branch
+- Branch already exists: Proceeds normally
 
 ## Phase Execution Workflow
 
