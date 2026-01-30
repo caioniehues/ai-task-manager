@@ -1,3 +1,7 @@
+## <small>1.26.11 (2026-01-30)</small>
+
+* fix: remove deps on non-core ([fc649ea](https://github.com/e0ipso/ai-task-manager/commit/fc649ea))
+
 ## <small>1.26.10 (2026-01-30)</small>
 
 * fix: use binary exit codes in create-feature-branch script ([118c637](https://github.com/e0ipso/ai-task-manager/commit/118c637))
