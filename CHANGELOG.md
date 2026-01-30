@@ -1,3 +1,7 @@
+## <small>1.26.10 (2026-01-30)</small>
+
+* fix: use binary exit codes in create-feature-branch script ([118c637](https://github.com/e0ipso/ai-task-manager/commit/118c637))
+
 ## <small>1.26.9 (2026-01-26)</small>
 
 * Merge remote-tracking branch 'origin/main' ([610daff](https://github.com/e0ipso/ai-task-manager/commit/610daff))
