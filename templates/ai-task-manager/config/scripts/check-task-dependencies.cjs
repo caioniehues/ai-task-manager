@@ -7,47 +7,24 @@
  * Returns: 0 if all dependencies are resolved, 1 if not
  */
 
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const {
   resolvePlan,
   parseFrontmatter
 } = require('./shared-utils.cjs');
 
-// Chalk instance - loaded dynamically to handle ESM module
-let chalkInstance = null;
-
-// Initialize chalk instance dynamically
-async function _initChalk() {
-  if (chalkInstance) return chalkInstance;
-
-  try {
-    const {
-      default: chalk
-    } = await import('chalk');
-    chalkInstance = chalk;
-  } catch (_error) {
-    // Chalk not available, will fall back to plain console output
-    chalkInstance = null;
-  }
-
-  return chalkInstance;
-}
-
 // Color functions for output
-const _printError = (message, chalk) => {
-  const formattedMessage = chalk?.red(`ERROR: ${message}`) || `ERROR: ${message}`;
-  console.error(formattedMessage);
+const _printError = (message) => {
+  console.error(`ERROR: ${message}`);
 };
 
-const _printSuccess = (message, chalk) => {
-  const formattedMessage = chalk?.green(`✓ ${message}`) || `✓ ${message}`;
-  console.log(formattedMessage);
+const _printSuccess = (message) => {
+  console.log(`✓ ${message}`);
 };
 
-const _printWarning = (message, chalk) => {
-  const formattedMessage = chalk?.yellow(`⚠ ${message}`) || `⚠ ${message}`;
-  console.log(formattedMessage);
+const _printWarning = (message) => {
+  console.log(`⚠ ${message}`);
 };
 
 const _printInfo = (message) => {
@@ -141,13 +118,10 @@ const _extractStatus = (frontmatter) => {
 };
 
 // Main function
-const _main = async (startPath = process.cwd()) => {
-  // Initialize chalk
-  const chalk = await _initChalk();
-
+const _main = (startPath = process.cwd()) => {
   // Check arguments
   if (process.argv.length !== 4) {
-    _printError('Invalid number of arguments', chalk);
+    _printError('Invalid number of arguments');
     console.log('Usage: node check-task-dependencies.cjs <plan-id-or-path> <task-id>');
     console.log('Example: node check-task-dependencies.cjs 16 03');
     process.exit(1);
@@ -159,7 +133,7 @@ const _main = async (startPath = process.cwd()) => {
   const resolved = resolvePlan(inputId, startPath);
 
   if (!resolved) {
-    _printError(`Plan "${inputId}" not found or invalid`, chalk);
+    _printError(`Plan "${inputId}" not found or invalid`);
     process.exit(1);
   }
 
@@ -173,7 +147,7 @@ const _main = async (startPath = process.cwd()) => {
   const taskFile = _findTaskFile(planDir, taskId);
 
   if (!taskFile || !fs.existsSync(taskFile)) {
-    _printError(`Task with ID ${taskId} not found in plan ${planId}`, chalk);
+    _printError(`Task with ID ${taskId} not found in plan ${planId}`);
     process.exit(1);
   }
 
@@ -187,7 +161,7 @@ const _main = async (startPath = process.cwd()) => {
 
   // Check if there are any dependencies
   if (dependencies.length === 0) {
-    _printSuccess('Task has no dependencies - ready to execute!', chalk);
+    _printSuccess('Task has no dependencies - ready to execute!');
     process.exit(0);
   }
 
@@ -212,7 +186,7 @@ const _main = async (startPath = process.cwd()) => {
     const depFile = _findTaskFile(planDir, depId);
 
     if (!depFile || !fs.existsSync(depFile)) {
-      _printError(`Dependency task ${depId} not found`, chalk);
+      _printError(`Dependency task ${depId} not found`);
       allResolved = false;
       unresolvedDeps.push(`${depId} (not found)`);
       continue;
@@ -225,10 +199,10 @@ const _main = async (startPath = process.cwd()) => {
 
     // Check if status is completed
     if (status === 'completed') {
-      _printSuccess(`Task ${depId} - Status: completed ✓`, chalk);
+      _printSuccess(`Task ${depId} - Status: completed ✓`);
       resolvedCount++;
     } else {
-      _printWarning(`Task ${depId} - Status: ${status || 'unknown'} ✗`, chalk);
+      _printWarning(`Task ${depId} - Status: ${status || 'unknown'} ✗`);
       allResolved = false;
       unresolvedDeps.push(`${depId} (${status || 'unknown'})`);
     }
@@ -244,10 +218,10 @@ const _main = async (startPath = process.cwd()) => {
   console.log('');
 
   if (allResolved) {
-    _printSuccess(`All dependencies are resolved! Task ${taskId} is ready to execute.`, chalk);
+    _printSuccess(`All dependencies are resolved! Task ${taskId} is ready to execute.`);
     process.exit(0);
   } else {
-    _printError(`Task ${taskId} has unresolved dependencies:`, chalk);
+    _printError(`Task ${taskId} has unresolved dependencies:`);
     unresolvedDeps.forEach(dep => {
       console.log(dep);
     });
@@ -258,10 +232,7 @@ const _main = async (startPath = process.cwd()) => {
 
 // Run the script
 if (require.main === module) {
-  _main().catch((error) => {
-    console.error('Script execution failed:', error);
-    process.exit(1);
-  });
+  _main();
 }
 
 module.exports = {

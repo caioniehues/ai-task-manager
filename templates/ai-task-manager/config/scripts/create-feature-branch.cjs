@@ -15,43 +15,21 @@ const fs = require('fs');
 const path = require('path');
 const { resolvePlan } = require('./shared-utils.cjs');
 
-// Chalk instance - loaded dynamically to handle ESM module
-let chalkInstance = null;
-
-// Initialize chalk instance dynamically
-async function _initChalk() {
-  if (chalkInstance) return chalkInstance;
-
-  try {
-    const { default: chalk } = await import('chalk');
-    chalkInstance = chalk;
-  } catch (_error) {
-    // Chalk not available, will fall back to plain console output
-    chalkInstance = null;
-  }
-
-  return chalkInstance;
-}
-
 // Color functions for output
-const _printError = (message, chalk) => {
-  const formattedMessage = chalk?.red(`ERROR: ${message}`) || `ERROR: ${message}`;
-  console.error(formattedMessage);
+const _printError = (message) => {
+  console.error(`ERROR: ${message}`);
 };
 
-const _printSuccess = (message, chalk) => {
-  const formattedMessage = chalk?.green(`✓ ${message}`) || `✓ ${message}`;
-  console.log(formattedMessage);
+const _printSuccess = (message) => {
+  console.log(`✓ ${message}`);
 };
 
-const _printWarning = (message, chalk) => {
-  const formattedMessage = chalk?.yellow(`⚠ ${message}`) || `⚠ ${message}`;
-  console.log(formattedMessage);
+const _printWarning = (message) => {
+  console.log(`⚠ ${message}`);
 };
 
-const _printInfo = (message, chalk) => {
-  const formattedMessage = chalk?.blue(message) || message;
-  console.log(formattedMessage);
+const _printInfo = (message) => {
+  console.log(message);
 };
 
 /**
@@ -141,13 +119,10 @@ const _extractPlanName = (planDir) => {
 };
 
 // Main function
-const _main = async (startPath = process.cwd()) => {
-  // Initialize chalk
-  const chalk = await _initChalk();
-
+const _main = (startPath = process.cwd()) => {
   // Check arguments
   if (process.argv.length < 3) {
-    _printError('Missing plan ID argument', chalk);
+    _printError('Missing plan ID argument');
     console.log('Usage: node create-feature-branch.cjs <plan-id-or-path>');
     console.log('Example: node create-feature-branch.cjs 58');
     process.exit(1);
@@ -157,7 +132,7 @@ const _main = async (startPath = process.cwd()) => {
 
   // Step 1: Check if this is a git repository
   if (!_isGitRepo()) {
-    _printError('Not a git repository', chalk);
+    _printError('Not a git repository');
     process.exit(1);
   }
 
@@ -165,31 +140,31 @@ const _main = async (startPath = process.cwd()) => {
   const resolved = resolvePlan(inputId, startPath);
 
   if (!resolved) {
-    _printError(`Plan "${inputId}" not found or invalid`, chalk);
+    _printError(`Plan "${inputId}" not found or invalid`);
     process.exit(1);
   }
 
   const { planDir, planId } = resolved;
-  _printInfo(`Found plan: ${path.basename(planDir)}`, chalk);
+  _printInfo(`Found plan: ${path.basename(planDir)}`);
 
   // Step 3: Check current branch
   const currentBranch = _getCurrentBranch();
 
   if (!currentBranch) {
-    _printError('Could not determine current git branch', chalk);
+    _printError('Could not determine current git branch');
     process.exit(1);
   }
 
   if (currentBranch !== 'main' && currentBranch !== 'master') {
-    _printWarning(`Not on main/master branch (current: ${currentBranch})`, chalk);
-    _printInfo('Proceeding without creating a new branch', chalk);
+    _printWarning(`Not on main/master branch (current: ${currentBranch})`);
+    _printInfo('Proceeding without creating a new branch');
     process.exit(0);
   }
 
   // Step 4: Check for uncommitted changes
   if (_hasUncommittedChanges()) {
-    _printError('Uncommitted changes detected in working tree', chalk);
-    _printInfo('Please commit or stash your changes before creating a feature branch', chalk);
+    _printError('Uncommitted changes detected in working tree');
+    _printInfo('Please commit or stash your changes before creating a feature branch');
     process.exit(1);
   }
 
@@ -200,8 +175,8 @@ const _main = async (startPath = process.cwd()) => {
 
   // Step 6: Check if branch already exists
   if (_branchExists(branchName)) {
-    _printWarning(`Branch "${branchName}" already exists`, chalk);
-    _printInfo('Proceeding with existing branch', chalk);
+    _printWarning(`Branch "${branchName}" already exists`);
+    _printInfo('Proceeding with existing branch');
     process.exit(0);
   }
 
@@ -209,20 +184,17 @@ const _main = async (startPath = process.cwd()) => {
   const createResult = _execGit(`git checkout -b "${branchName}"`);
 
   if (createResult === null) {
-    _printError(`Failed to create branch "${branchName}"`, chalk);
+    _printError(`Failed to create branch "${branchName}"`);
     process.exit(1);
   }
 
-  _printSuccess(`Created and switched to branch: ${branchName}`, chalk);
+  _printSuccess(`Created and switched to branch: ${branchName}`);
   process.exit(0);
 };
 
 // Run the script
 if (require.main === module) {
-  _main().catch((error) => {
-    console.error('Script execution failed:', error);
-    process.exit(1);
-  });
+  _main();
 }
 
 module.exports = {
