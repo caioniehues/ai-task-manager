@@ -1,3 +1,10 @@
+## 1.27.0 (2026-02-02)
+
+* Merge remote-tracking branch 'origin/main' ([0ac8f6b](https://github.com/e0ipso/ai-task-manager/commit/0ac8f6b))
+* refactor: simplify hooks and fix findRoot traversal in command templates ([9acf66a](https://github.com/e0ipso/ai-task-manager/commit/9acf66a))
+* feat: add POST_EXECUTION hook file ([18bbf5e](https://github.com/e0ipso/ai-task-manager/commit/18bbf5e))
+* feat: integrate POST_EXECUTION hook into templates and docs ([c2591f8](https://github.com/e0ipso/ai-task-manager/commit/c2591f8))
+
 ## <small>1.26.11 (2026-01-30)</small>
 
 * fix: remove deps on non-core ([fc649ea](https://github.com/e0ipso/ai-task-manager/commit/fc649ea))
