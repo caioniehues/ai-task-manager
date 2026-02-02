@@ -123,6 +123,7 @@ Use your internal Todo task tool to track the execution of all phases, and the f
 - [ ] Execute $root/.ai/task-manager/config/hooks/PRE_PHASE.md hook before Phase 3.
 - [ ] Phase 3: Execute 1 task(s) in parallel.
 - [ ] Execute $root/.ai/task-manager/config/hooks/POST_PHASE.md hook after Phase 3.
+- [ ] Execute $root/.ai/task-manager/config/hooks/POST_EXECUTION.md hook after all phases complete.
 - [ ] Update the Plan 7 with execution summary using $root/.ai/task-manager/config/hooks/EXECUTION_SUMMARY_TEMPLATE.md.
 - [ ] Archive Plan 7.
 
@@ -198,8 +199,15 @@ This structured output enables automated workflow coordination and must be inclu
 
 Upon successful completion of all phases and validation gates, perform the following additional steps:
 
+- [ ] Post-Execution Validation
 - [ ] Execution Summary Generation
 - [ ] Plan Archival
+
+### 0. Post-Execution Validation
+
+Read and execute $root/.ai/task-manager/config/hooks/POST_EXECUTION.md
+
+If validation fails, halt execution. The plan remains in `plans/` for debugging.
 
 ### 1. Execution Summary Generation
 

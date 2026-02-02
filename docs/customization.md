@@ -132,6 +132,24 @@ The hook system injects custom logic at seven key points in the workflow lifecyc
 - Implement custom retry strategies
 - Send notifications for critical failures
 
+#### 8. POST_EXECUTION Hook
+
+**File**: `POST_EXECUTION.md`
+**Purpose**: Final validation after all blueprint phases complete successfully, before execution summary generation and plan archival
+
+**Key Functions**:
+- Validates linting requirements across all code
+- Ensures all tests pass
+- Verifies all tasks are marked as completed
+- Prevents plan archival if validation fails
+
+**Common Customizations**:
+- Add comprehensive test suite execution
+- Run security vulnerability scans
+- Verify documentation is up to date
+- Check code coverage thresholds
+- Validate deployment readiness
+
 ### Customization Example: POST_PHASE Hook
 
 **Default Implementation:**

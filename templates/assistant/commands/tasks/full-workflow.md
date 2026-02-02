@@ -443,8 +443,15 @@ This structured output enables automated workflow coordination and must be inclu
 
 Upon successful completion of all phases and validation gates, perform the following additional steps:
 
+- [ ] Post-Execution Validation
 - [ ] Execution Summary Generation
 - [ ] Plan Archival
+
+#### Post-Execution Validation
+
+Read and execute $root/.ai/task-manager/config/hooks/POST_EXECUTION.md
+
+If validation fails, halt execution. The plan remains in `plans/` for debugging.
 
 #### Execution Summary Generation
 

@@ -233,7 +233,7 @@ AI Task Manager is built for customization through three extension points:
 
 ### 1. Hooks System
 
-Seven lifecycle hooks inject custom logic:
+Eight lifecycle hooks inject custom logic:
 
 ```
 PRE_PLAN → Planning guidance
@@ -243,6 +243,7 @@ POST_PLAN → Plan validation
 POST_TASK_GENERATION_ALL → Task refinement
 POST_PHASE → Quality gates
 POST_ERROR_DETECTION → Error handling
+POST_EXECUTION → Final validation before summary and archival
 ```
 
 **Why Hooks Matter**:
@@ -255,6 +256,7 @@ POST_ERROR_DETECTION → Error handling
 - POST_PHASE: Run TypeScript compilation, test suite, coverage check
 - PRE_PLAN: Include architecture guidelines from design docs
 - POST_ERROR_DETECTION: Send Slack notifications on failures
+- POST_EXECUTION: Run comprehensive test suite and security scans before completion
 
 See [Customization Guide](customization.html) for detailed hook examples.
 
