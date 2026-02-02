@@ -11,19 +11,13 @@ This hook executes before task assignment to determine the most appropriate agen
     - Select the most appropriate sub-agent (if any are available). If no sub-agent is appropriate, use the general-purpose one.
     - Consider task-specific requirements from the task document
 
-<details>
-<summary>
-[IMPORTANT] Only for assistants that support assistant skills: Claude
-</summary>
-
-Analyze the set of tasks skills in order to engage any relevant assistant skills as necessary (either global or project skills).
-</details>
+[IMPORTANT] Analyze the set of tasks skills in order to engage any relevant assistant skills as necessary (either global
+or project skills).
 
 
 ## Available Sub-Agents
-Analyze the sub-agents available in your current assistant's agents directory. If none are available
-or the available ones do not match the task's requirements, then use a generic
-agent.
+Analyze the sub-agents available in your current assistant's agents directory. If none are available or the available
+ones do not match the task's requirements, then use a generic agent.
 
 ## Matching Criteria
 Select agents based on:
@@ -38,27 +32,7 @@ Read task skills and select appropriate task-specific agent:
 
 ```bash
 # Extract skills from task frontmatter
-TASK_SKILLS=$(awk '
-    /^---$/ { if (++delim == 2) exit }
-    /^skills:/ {
-        in_skills = 1
-        # Check if skills are on the same line
-        if (match($0, /\[.*\]/)) {
-            gsub(/^skills:[ \t]*\[/, "")
-            gsub(/\].*$/, "")
-            gsub(/[ \t]/, "")
-            print
-            in_skills = 0
-        }
-        next
-    }
-    in_skills && /^[^ ]/ { in_skills = 0 }
-    in_skills && /^[ \t]*-/ {
-        gsub(/^[ \t]*-[ \t]*/, "")
-        gsub(/^"/, ""); gsub(/"$/, "")
-        print
-    }
-' "$TASK_FILE" | tr ',' '\n' | sed 's/^[ \t]*//;s/[ \t]*$//' | grep -v '^$')
+TASK_SKILLS=$(node "$root/config/scripts/extract-task-skills.cjs" "$TASK_FILE")
 
 echo "Task skills required: $TASK_SKILLS"
 

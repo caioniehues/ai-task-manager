@@ -34,7 +34,7 @@ const findRoot = (currentDir) => {
   }
 
   const parentDir = path.dirname(currentDir);
-  if (parentDir !== currentDir) {
+  if (parentDir.length < currentDir.length) {
     findRoot(parentDir);
   } else {
     process.exit(1);
